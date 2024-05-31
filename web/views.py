@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
@@ -43,7 +44,7 @@ def registro_usuario(request):
 def generar_solicitud_arriendo(request, id):
     # Obtener el inmueble por su ID
     inmueble = get_object_or_404(Inmueble, pk=id)
-    
+
     # Verificar si el usuario está autenticado y es un arrendatario
     if request.user.is_authenticated and request.user.tipo_usuario == 'arrendatario':
         if request.method == 'POST':
@@ -60,9 +61,8 @@ def generar_solicitud_arriendo(request, id):
         return render(request, 'generar_solicitud_arriendo.html', {'form': form})
     else:
         return redirect('index')
-    
-    
-    
+
+
 @login_required
 def solicitudes_arrendador(request):
     # Verificar si el usuario es un arrendador
@@ -72,9 +72,9 @@ def solicitudes_arrendador(request):
         return render(request, 'solicitudes_arrendador.html', {'solicitudes': solicitudes})
     else:
         # Redirigir a otra página si el usuario no es un arrendador
-        return redirect('index')  
-  
-  
+        return redirect('index')
+
+
 @login_required
 def crear_inmueble(request):
     if request.method == 'POST':
@@ -90,7 +90,6 @@ def crear_inmueble(request):
     return render(request, 'alta_inmueble.html', {'form': form})
 
 
-
 @login_required
 def actualizar_inmueble(request, id):
     inmueble = get_object_or_404(Inmueble, pk=id)
@@ -102,7 +101,8 @@ def actualizar_inmueble(request, id):
     else:
         form = InmuebleForm(instance=inmueble)
     return render(request, 'editar_inmueble.html',{'form':form })
-        
+
+
 @login_required
 def eliminar_inmueble(request, id):
     inmueble = get_object_or_404(Inmueble, pk=id)
@@ -111,7 +111,7 @@ def eliminar_inmueble(request, id):
         return redirect('dashboard')
     else:
         return render(request,'eliminar_inmueble.html', {'inmueble':inmueble} )
-        
+
 
 @login_required
 def dashboard(request):
@@ -126,9 +126,9 @@ def dashboard(request):
             inmuebles = inmuebles.filter(comuna__region_id=region_id)
         if comuna_id:
             inmuebles = inmuebles.filter(comuna_id=comuna_id)
-        
+
         return render(request, 'dashboard_arrendatario.html', {'solicitudes': solicitudes, 'regiones': regiones, 'comunas': comunas, 'inmuebles': inmuebles})
-    
+
     elif request.user.tipo_usuario == 'arrendador':
         # Obtener las solicitudes recibidas por el arrendador
         solicitudes_recibidas = SolicitudArriendo.objects.filter(inmueble__propietario=request.user)
@@ -140,12 +140,12 @@ def dashboard(request):
 @login_required
 def actualizar_usuario(request):
     if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=request.user.usuario)
+        form = CustomUserChangeForm(request.POST, instance=request.user)
         print(form)
         if form.is_valid():
             form.save()
             messages.success(request, '¡Los datos del usuario han sido actualizados!')
-            return redirect('dashboard') 
+            return redirect('dashboard')
     else:
         form = CustomUserChangeForm(instance=request.user)
     return render(request, 'perfil.html', {'form': form})
@@ -160,3 +160,10 @@ def cambiar_estado_solicitud(request, solicitud_id):
             solicitud.estado = nuevo_estado
             solicitud.save()
     return redirect('dashboard')
+
+def comunas(request):
+    region_id = request.GET.get('region')
+    comunas = Comuna.objects.filter(region_id=region_id)
+    for comuna in comunas:
+        data = f"<option value='{comuna.id}'>{comuna.nombre}</option>"
+    return data

@@ -9,16 +9,9 @@ class Region(models.Model):
         return self.nombre
 
 
-class Provincia(models.Model):
-    nombre = models.CharField(max_length=100)
-    region = models.ForeignKey(Region, related_name='provincias', on_delete=models.CASCADE)
-    def __str__(self):
-        return self.nombre
-
-
 class Comuna(models.Model):
     nombre = models.CharField(max_length=100)
-    provincia = models.ForeignKey(Provincia, related_name='comunas', on_delete=models.CASCADE)
+    region = models.ForeignKey(Region, related_name='comunas', on_delete=models.CASCADE)
     def __str__(self):
         return self.nombre
 
