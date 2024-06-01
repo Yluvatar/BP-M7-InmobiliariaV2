@@ -121,7 +121,7 @@ def dashboard(request):
         comunas = Comuna.objects.all()
         region_id = request.GET.get('region')
         comuna_id = request.GET.get('comuna')
-        inmuebles = Inmueble.objects.all()
+        inmuebles = Inmueble.objects.filter(disponible=True)
         if region_id:
             inmuebles = inmuebles.filter(comuna__region_id=region_id)
         if comuna_id:

@@ -7,7 +7,8 @@
     <h2>Dashboard - Arrendatario</h2>
   </div>
 
-  <div class="container mb-3 mx-auto">
+  <div class="container mb-5 mx-auto">
+
     <form class="row g-3" method="GET" action="{% url 'dashboard' %}">
       <div class="col-auto">
         <label for="region" class="visually-hidden">Región:</label>
@@ -31,6 +32,7 @@
         <button class="btn btn-primary" type="submit">Filtrar</button>
       </div>
     </form>
+
   </div>
 
   <div class="text-center mb-3">
@@ -46,17 +48,22 @@
                 <img class="card-img-top" src="/media/{{inm.imagen}}" alt="Card image cap">
               </a>
               <div class="card-body">
-                <h5 class="card-title">{{ inm.name }}</h5>
+                <h5 class="card-title">
+                  <span class="p-1 me-2 text-primary bg-primary-subtle border border-primary-subtle rounded-3">
+                    {{ inm.tipo_de_inmueble }}
+                  </span>
+                  {{ inm.nombre }}
+                </h5>
                 <p class="card-text text-justify">
-                    {% if inm.descripcion|length > 10 %}
-                        {{ inm.descripcion|slice:":10" }}... <a href="">descripcion</a>
+                    {% if inm.descripcion|length > 50 %}
+                        {{ inm.descripcion|slice:":50" }}... <a href="">descripcion</a>
                     {% else %}
                         {{ inm.descripcion}}
                     {% endif %}
                 </p>
               </div>
               <div class="card-footer">
-                <a href="{% url 'detalle' inm.id %}">detalle del inmueble</a>
+                <a class="btn btn-primary" href="{% url 'detalle' inm.id %}">Detalles</a>
               </div>
             </div>
           </div>
@@ -66,7 +73,7 @@
   </ul>
 
   <div class="text-center mb-3">
-    <h3>Solicitudes de Arriendo:</h3>
+    <h3>Mis Solicitudes de Arriendo:</h3>
   </div>
 
   <section class="container mx-auto pt-5">
@@ -91,22 +98,6 @@
         </div> <!---Fin Div Card-->
       {% endfor %}
     </div>
-   </section>
+  </section>
 
-   <script>
-    $.(function() {
-      $("#region").change(() => {
-        $("#comuna").empty();
-        $.ajax({
-          url: "{% url 'comunas' %}",
-          data: {
-            region: $("#region").val(),
-          },
-          success: function(response) {
-            $("#comuna").html(response);
-          },
-        });
-      });
-    });
-  </script>
 {% endblock %}

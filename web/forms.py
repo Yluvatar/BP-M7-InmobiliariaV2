@@ -1,5 +1,5 @@
 from django import forms
-from .models import Usuario, SolicitudArriendo,Inmueble
+from .models import Usuario, SolicitudArriendo,Inmueble, Region, Comuna
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User
 
