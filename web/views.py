@@ -77,17 +77,24 @@ def solicitudes_arrendador(request):
 
 @login_required
 def crear_inmueble(request):
-    if request.method == 'POST':
+    region_id = request.POST.get('region_id') or 0
+
+    if request.method == 'POST' and region_id != 0 and request.POST.get('comuna') != 0:
         form = InmuebleForm(request.POST, request.FILES)
         print(form)
         if form.is_valid():
             inmueble = form.save(commit=False)
-            inmueble.propietario = request.user.usuario
+            inmueble.propietario = request.user
             inmueble.save()
-            return redirect('dashboard') 
+            return redirect('dashboard')
     else:
         form = InmuebleForm()
-    return render(request, 'alta_inmueble.html', {'form': form})
+        regiones = Region.objects.all()
+        if region_id == 0:
+            comunas = Comuna.objects.all()
+        else:
+            comunas = Comuna.objects.filter(region=request.region_id)
+    return render(request, 'alta_inmueble.html', {'form': form, 'regiones': regiones, 'comunas': comunas})
 
 
 @login_required
@@ -100,6 +107,7 @@ def actualizar_inmueble(request, id):
             return redirect('dashboard')
     else:
         form = InmuebleForm(instance=inmueble)
+
     return render(request, 'editar_inmueble.html',{'form':form })
 
 

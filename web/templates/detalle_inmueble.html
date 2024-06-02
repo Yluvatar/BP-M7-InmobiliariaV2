@@ -35,8 +35,12 @@
           <div class="info-table">
             <ul>
               <li>
-                <img src="{% static 'assets/images/info-icon-01.png' %}" alt="" style="max-width: 52px;">
+                <img src="{% static 'assets/images/info-icon-04.png' %}" alt="" style="max-width: 52px;">
                 <h4>{{inmueble.m2_construidos}} m2<br><span>Metros construidos</span></h4>
+              </li>
+              <li>
+                <img src="{% static 'assets/images/info-icon-01.png' %}" alt="" style="max-width: 52px;">
+                <h4>{{inmueble.m2_terreno}} m2<br><span>Metros Terreno</span></h4>
               </li>
               <li>
                 <img src="{% static 'assets/images/info-icon-02.png' %}" alt="" style="max-width: 52px;">
@@ -44,11 +48,7 @@
               </li>
               <li>
                 <img src="{% static 'assets/images/info-icon-03.png' %}" alt="" style="max-width: 52px;">
-                <h4>Valor Arriendo<br><span>{{inmueble.precio|floatformat:'-3g'}}</span></h4>
-              </li>
-              <li>
-                <img src="{% static 'assets/images/info-icon-04.png' %}" alt="" style="max-width: 52px;">
-                <h4>Seguridad<br><span>24/7 Con Control</span></h4>
+                <h4>Valor Arriendo<br><span>$ {{inmueble.precio|floatformat:'-3g'}}</span></h4>
               </li>
             </ul>
             {% if user.tipo_usuario == 'arrendatario' %}

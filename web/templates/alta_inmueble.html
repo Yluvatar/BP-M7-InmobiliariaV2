@@ -40,11 +40,11 @@
                 <div class="col-12 col-md-6">
 
                     <label for="region" class="form-label">Region</label>
-                    <select class="form-select" aria-label="Region select" id="region" name="region">
-                        <option selected>Region</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                    <select class="form-select" aria-label="Region select" id="region" name="region" onchange="loadComunas()">
+                        <option value="0" selected>Region</option>
+                        {% for region in regiones %}
+                            <option value="{{ region.id }}">{{ region.nombre }}</option>
+                        {% endfor %}
                     </select>
 
                 </div>
@@ -53,10 +53,10 @@
 
                     <label for="comuna" class="form-label">Comuna</label>
                     <select class="form-select" aria-label="Comuna select" id="comuna" name="comuna">
-                        <option selected>Comuna</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <option value="0" selected>Comuna</option>
+                        {% for comuna in comunas %}
+                            <option value="{{ comuna.id }}">{{ comuna.nombre }}</option>
+                        {% endfor %}
                     </select>
 
                 </div>
@@ -133,9 +133,48 @@
 
         </div>
 
-        <button class="btn btn-primary" type="submit">Guardar</button>
+        <div class="d-inline-row">
+            <button class="btn btn-primary" type="submit">Guardar</button>
+            <a class="btn btn-secondary" href="{% url 'dashboard' %}">Volver</a>
+        </div>
     </form>
 
 </div>
+
+<script>
+
+    function getCookie(name) {
+
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        //RETORNANDO EL TOKEN
+        return cookieValue;
+  
+    }//end function getCookie
+
+    function loadComunas() {
+        let region_id = $('#region').val();
+        let csrftoken = getCookie('csrftoken');
+        if (region_id !== '0') {
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'alta_inmueble' %}',
+                data: {csrfmiddlewaretoken: csrftoken,'region_id': region_id},
+                success: function (data) {
+                }
+            });
+        }
+    }
+
+</script>
 
 {% endblock %}
