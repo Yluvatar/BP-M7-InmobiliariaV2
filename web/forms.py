@@ -1,5 +1,5 @@
 from django import forms
-from .models import Usuario, SolicitudArriendo,Inmueble
+from .models import Comuna, Usuario, SolicitudArriendo,Inmueble
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User
 
@@ -22,10 +22,10 @@ class InmuebleForm(forms.ModelForm):
 class SolicitudArriendoForm(forms.ModelForm):
     class Meta:
         model = SolicitudArriendo
-        fields = ['inmueble', 'mensaje']
+        fields = ['inmueble', 'mensaje', 'estado']
 
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
-        model = User
-        fields = ['first_name', 'last_name', 'email', 'password']
+        model = Usuario
+        fields = ['nombres', 'apellidos', 'correo_electronico']

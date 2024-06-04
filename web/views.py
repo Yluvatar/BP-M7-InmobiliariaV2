@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.forms import modelformset_factory
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, authenticate
@@ -48,6 +49,7 @@ def generar_solicitud_arriendo(request, id):
     # Verificar si el usuario está autenticado y es un arrendatario
     if request.user.is_authenticated and request.user.tipo_usuario == 'arrendatario':
         if request.method == 'POST':
+            print(request.POST)
             form = SolicitudArriendoForm(request.POST)
             if form.is_valid():
                 solicitud = form.save(commit=False)
@@ -58,7 +60,7 @@ def generar_solicitud_arriendo(request, id):
         else:
             # Inicializar el formulario con el inmueble correspondiente
             form = SolicitudArriendoForm(initial={'inmueble': inmueble})
-        return render(request, 'generar_solicitud_arriendo.html', {'form': form})
+        return render(request, 'generar_solicitud_arriendo.html', {'form': form, 'inmueble': inmueble})
     else:
         return redirect('index')
 
@@ -77,9 +79,10 @@ def solicitudes_arrendador(request):
 
 @login_required
 def crear_inmueble(request):
-    region_id = request.POST.get('region_id') or 0
+    regiones = Region.objects.all()
+    comunas = Comuna.objects.all()
 
-    if request.method == 'POST' and region_id != 0 and request.POST.get('comuna') != 0:
+    if request.method == 'POST':
         form = InmuebleForm(request.POST, request.FILES)
         print(form)
         if form.is_valid():
@@ -89,26 +92,29 @@ def crear_inmueble(request):
             return redirect('dashboard')
     else:
         form = InmuebleForm()
-        regiones = Region.objects.all()
-        if region_id == 0:
-            comunas = Comuna.objects.all()
-        else:
-            comunas = Comuna.objects.filter(region=request.region_id)
+
     return render(request, 'alta_inmueble.html', {'form': form, 'regiones': regiones, 'comunas': comunas})
 
 
 @login_required
 def actualizar_inmueble(request, id):
     inmueble = get_object_or_404(Inmueble, pk=id)
+
     if request.method == 'POST':
         form = InmuebleForm(request.POST, request.FILES, instance=inmueble)
+        print(request.POST)
+        print(form)
         if form.is_valid():
+            print(form)
             form.save()
             return redirect('dashboard')
     else:
         form = InmuebleForm(instance=inmueble)
 
-    return render(request, 'editar_inmueble.html',{'form':form })
+    comunas = Comuna.objects.all()
+    regiones = Region.objects.all()
+
+    return render(request, 'editar_inmueble.html',{'form':form, 'comunas':comunas, 'regiones':regiones})
 
 
 @login_required
@@ -139,7 +145,7 @@ def dashboard(request):
 
     elif request.user.tipo_usuario == 'arrendador':
         # Obtener las solicitudes recibidas por el arrendador
-        solicitudes_recibidas = SolicitudArriendo.objects.filter(inmueble__propietario=request.user)
+        solicitudes_recibidas = SolicitudArriendo.objects.filter(inmueble__propietario=request.user, estado='pendiente')
         # Obtener los inmuebles del arrendador
         inmuebles = Inmueble.objects.filter(propietario=request.user)
         return render(request, 'dashboard_arrendador.html', {'solicitudes_recibidas': solicitudes_recibidas, 'inmuebles': inmuebles})
@@ -167,6 +173,9 @@ def cambiar_estado_solicitud(request, solicitud_id):
             nuevo_estado = request.POST.get('nuevo_estado')
             solicitud.estado = nuevo_estado
             solicitud.save()
+            inmueble = Inmueble.objects.get(pk=solicitud.inmueble.id)
+            inmueble.disponible = False
+            inmueble.save()
     return redirect('dashboard')
 
 def comunas(request):

@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="col-12 col-md-2">
-                        <input type="checkbox" class="form-check-input" id="eliminar_imagen" name="eliminar_imagen" checked>
+                        <input type="checkbox" class="form-check-input" id="eliminar_imagen" name="eliminar_imagen">
                         <label class="form-check-label" for="eliminar_imagen">Eliminar</label>
                     </div>
 
@@ -132,9 +132,9 @@
                         <label for="tipo_de_inmueble" class="form-label">Tipo de Inmueble</label>
                         <select class="mb-3 form-select" aria-label="Tipo de Inmueble select" id="tipo_de_inmueble" name="tipo_de_inmueble">
                             <option selected>Tipo de Inmueble</option>
-                            {% for inm in form.tipo_de_inmueble  %}
-                                <option value="{{inm}}" {% if inm == form.tipo_de_inmueble.value %}selected{% endif %}>{{inm}}</option>
-                            {% endfor %}
+                            <option value="casa" {% if form.tipo_de_inmueble.value == 'casa' %} selected{% endif %}>Casa</option>
+                            <option value="departamento"{% if form.tipo_de_inmueble.value == 'departamento' %} selected{% endif %}>Departamento</option>
+                            <option value="parcela" {% if form.tipo_de_inmueble.value == 'parcela' %} selected{% endif %}>Parcela</option>
                         </select>
                     </div>
 
@@ -160,5 +160,43 @@
         </form>
 
     </div>
+
+    {% comment %} <script>
+
+        function getCookie(name) {
+    
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            //RETORNANDO EL TOKEN
+            return cookieValue;
+
+        }//end function getCookie
+
+        function loadComunas() {
+            event.preventDefault();
+            let region_id = $('#region').val();
+            let id = $('#id').val();
+            let csrftoken = getCookie('csrftoken');
+            if (region_id !== '0') {
+                $.ajax({
+                    type: 'POST',
+                    url: $("#url").val(),
+                    data: {csrfmiddlewaretoken: csrftoken,'region_id': region_id},
+                    success: function (data) {
+                    }
+                });
+            }
+        }
+    
+    </script> {% endcomment %}
 
 {% endblock %}
