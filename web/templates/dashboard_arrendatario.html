@@ -73,32 +73,45 @@
     </section>
   </ul>
 
-  <div class="text-center my-4">
+  <div class="text-center my-4 pt-4">
     <h3>Mis Solicitudes de Arriendo:</h3>
   </div>
 
   <section class="container mx-auto pt-5">
-    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
+
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+
       {% for solicitud in solicitudes %}
         <!---Inicio Div Card-->
-        <div class="card mb-3
-          {% if solicitud.estado == 'aceptado' %}bg-success
-          {% elif solicitud.estado == 'pendiente' %}bg-warning
-          {% elif solicitud.estado == 'rechazado' %}bg-danger
-          {% else %}bg-secondary{% endif %}"
-          style="max-width: 18rem;"
-        >
+        <div class="card mb-3" style="max-width: 18rem;">
         <!---Fin Div Card (declaración de clases)-->
 
-          <div class="card-header">{{solicitud.estado}}</div>
+          <div class="card-header mt-2
+            {% if solicitud.estado == 'aceptado' %}bg-success
+            {% elif solicitud.estado == 'pendiente' %}bg-warning
+            {% elif solicitud.estado == 'rechazado' %}bg-danger
+            {% else %}bg-secondary{% endif %}
+          ">
+            {{solicitud.estado}}
+          </div>
+
           <div class="card-body">
             <h5 class="card-title">{{ solicitud }}</h5>
             <P>{{solicitud.mensaje}}</P>
           </div>
 
+          <div class="card-footer">
+            <form action="{% url 'cancelar_solicitud' solicitud.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger" {% if solicitud.estado != 'pendiente' %}disabled{% endif %}>Cancelar Solicitud</button>
+            </form>
+          </div>
+
         </div> <!---Fin Div Card-->
       {% endfor %}
+
     </div>
+
   </section>
 
 {% endblock %}

@@ -32,12 +32,16 @@
 
               <div class="card-body">
                 <h5 class="card-title">{{inm.nombre}}</h5>
-                <h4 class="card-title">{{inm.tipo_de_inmueble}}</h4>
+                <h6 class="card-title">
+                  <div class="alert alert-warning p-2">
+                    {{inm.tipo_de_inmueble}}
+                  </div>
+                </h6>
                 <p class="card-text">
                   {% if inm.descripcion|length > 80 %}
-                        {{ inm.descripcion|slice:":80" }}... <a href="{% url 'detalle' inm.id %}">descripcion</a>
+                    {{ inm.descripcion|slice:":80" }}... <a href="{% url 'detalle' inm.id %}">descripcion</a>
                   {% else %}
-                      {{ inm.descripcion}}
+                    {{ inm.descripcion}}
                   {% endif %}
                 </p>
               </div>

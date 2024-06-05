@@ -22,7 +22,7 @@ class InmuebleForm(forms.ModelForm):
 class SolicitudArriendoForm(forms.ModelForm):
     class Meta:
         model = SolicitudArriendo
-        fields = ['inmueble', 'mensaje', 'estado']
+        fields = ['id','inmueble', 'mensaje', 'estado']
 
 
 class CustomUserChangeForm(UserChangeForm):

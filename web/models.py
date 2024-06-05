@@ -72,5 +72,5 @@ class SolicitudArriendo(models.Model):
     estado =models.CharField( max_length=10, choices=TIPO_ESTADO_CHOISES, default='pendiente')
 
     def __str__(self):
-        return f"Solicitud de {self.inmueble.nombre} por {self.arrendatario.nombres} {self.arrendatario.apellidos}"
+        return f"Solicitud de {self.inmueble.nombre} \n por {self.arrendatario.nombres} {self.arrendatario.apellidos}"
 

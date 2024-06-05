@@ -132,10 +132,10 @@ def dashboard(request):
         region_id = request.GET.get('region')
         comuna_id = request.GET.get('comuna')
         inmuebles = Inmueble.objects.filter(disponible=True)
-        if region_id:
+        if region_id and region_id != '0':
             inmuebles = inmuebles.filter(comuna__region_id=region_id)
         if comuna_id:
-            inmuebles = inmuebles.filter(comuna_id=comuna_id)
+            inmuebles = inmuebles.filter(comuna=comuna_id)
 
         return render(request, 'dashboard_arrendatario.html', {'solicitudes': solicitudes, 'regiones': regiones, 'comunas': comunas, 'inmuebles': inmuebles})
 
@@ -173,6 +173,15 @@ def cambiar_estado_solicitud(request, solicitud_id):
             inmueble.save()
     return redirect('dashboard')
 
+@login_required
+def cancelar_solicitud(request, solicitud_id):
+    solicitud = get_object_or_404(SolicitudArriendo, pk=solicitud_id)
+    if request.method == 'POST':
+        inmueble = Inmueble.objects.get(pk=solicitud.inmueble.id)
+        inmueble.disponible = True
+        inmueble.save()
+        solicitud.delete()
+    return redirect('dashboard')
 
 def comunas(request):
     region_id = request.GET.get('region')
