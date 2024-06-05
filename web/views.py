@@ -26,7 +26,6 @@ def detalle_inmueble(request, id):
 def registro_usuario(request):
     if request.method == 'POST':
         form = RegistroUsuarioForm(request.POST)
-        print(form)
         if form.is_valid():
             usuario = form.save(commit=False)
             password = form.cleaned_data['password']
@@ -36,10 +35,11 @@ def registro_usuario(request):
             usuario_autenticado = authenticate(username=usuario.username, password=password)
             if usuario_autenticado is not None:
                 login(request, usuario_autenticado)
-                return redirect('index')  
+                return redirect('home')
     else:
         form = RegistroUsuarioForm()
     return render(request, 'registro_usuario.html', {'form': form})
+
 
 @login_required
 def generar_solicitud_arriendo(request, id):
@@ -49,7 +49,7 @@ def generar_solicitud_arriendo(request, id):
     # Verificar si el usuario está autenticado y es un arrendatario
     if request.user.is_authenticated and request.user.tipo_usuario == 'arrendatario':
         if request.method == 'POST':
-            print(request.POST)
+            #print(request.POST)
             form = SolicitudArriendoForm(request.POST)
             if form.is_valid():
                 solicitud = form.save(commit=False)
@@ -84,7 +84,6 @@ def crear_inmueble(request):
 
     if request.method == 'POST':
         form = InmuebleForm(request.POST, request.FILES)
-        print(form)
         if form.is_valid():
             inmueble = form.save(commit=False)
             inmueble.propietario = request.user
@@ -102,10 +101,7 @@ def actualizar_inmueble(request, id):
 
     if request.method == 'POST':
         form = InmuebleForm(request.POST, request.FILES, instance=inmueble)
-        print(request.POST)
-        print(form)
         if form.is_valid():
-            print(form)
             form.save()
             return redirect('dashboard')
     else:
@@ -155,7 +151,6 @@ def dashboard(request):
 def actualizar_usuario(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user)
-        print(form)
         if form.is_valid():
             form.save()
             messages.success(request, '¡Los datos del usuario han sido actualizados!')
@@ -177,6 +172,7 @@ def cambiar_estado_solicitud(request, solicitud_id):
             inmueble.disponible = False
             inmueble.save()
     return redirect('dashboard')
+
 
 def comunas(request):
     region_id = request.GET.get('region')
