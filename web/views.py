@@ -8,19 +8,15 @@ from .models import SolicitudArriendo, Inmueble, Region, Comuna
 from .forms import CustomUserChangeForm, RegistroUsuarioForm, SolicitudArriendoForm, InmuebleForm
 
 
-
-
 def home(request):
     inmuebles = Inmueble.objects.all()
     return render(request, 'index.html',{'inmuebles': inmuebles})
-
 
 
 @login_required
 def detalle_inmueble(request, id):
     inmueble = Inmueble.objects.get (pk=id)
     return render(request,'detalle_inmueble.html',{'inmueble':inmueble})
-
 
 
 def registro_usuario(request):
@@ -173,6 +169,7 @@ def cambiar_estado_solicitud(request, solicitud_id):
             inmueble.save()
     return redirect('dashboard')
 
+
 @login_required
 def cancelar_solicitud(request, solicitud_id):
     solicitud = get_object_or_404(SolicitudArriendo, pk=solicitud_id)
@@ -182,6 +179,7 @@ def cancelar_solicitud(request, solicitud_id):
         inmueble.save()
         solicitud.delete()
     return redirect('dashboard')
+
 
 def comunas(request):
     region_id = request.GET.get('region')
