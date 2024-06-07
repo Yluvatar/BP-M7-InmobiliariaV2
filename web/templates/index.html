@@ -26,7 +26,7 @@
           <div class="col properties-items {% if inm.tipo_de_inmueble == 'casa' %} adv {% elif inm.tipo_de_inmueble == 'departamento' %} str {% elif inm.tipo_de_inmueble == 'parcela' %} rac {% endif %}">
             <div class="card h-100">
 
-              <a href="property-details.html">
+              <a href="{% url 'detalle' inm.id %}">
                 <img src="media/{{inm.imagen}}" class="card-img-top" alt="...">
               </a>
 
