@@ -1,20 +1,5 @@
 [
     {
-        "model": "web.region",
-        "pk": 1,
-        "fields": {
-            "nombre": "valparaiso"
-        }
-    },
-    {
-        "model": "web.comuna",
-        "pk": 1,
-        "fields": {
-            "nombre": "valparaiso",
-            "region": 1
-        }
-    },
-    {
         "model": "web.usuario",
         "pk": 1,
         "fields": {

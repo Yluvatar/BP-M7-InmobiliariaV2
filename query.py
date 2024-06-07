@@ -18,11 +18,11 @@ def fetch_data_from_db():
     with connection.cursor() as cursor:
         # Ejecutar la consulta SQL
         query = """
-        SELECT 
+        SELECT
           *
-        FROM 
+        FROM
         web_inmueble
-           
+
         """
         cursor.execute(query)
         # Obtener todos los resultados
@@ -33,8 +33,8 @@ def fetch_data_from_db():
 def save_data_to_txt(rows, file_path):
     with open(file_path, 'w') as file:
         for row in rows:
-            file.write(str(row) + '\n')    
-            
+            file.write(str(row) + '\n')
+
 def export_data_to_txt():
     # Paso 1: Obtener los datos de la base de datos
     rows = fetch_data_from_db()
