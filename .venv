@@ -1,0 +1,6 @@
+DB_NAME='inmobiliaria'
+DB_USER='postgres'
+DB_PASSWORD='jpsm'
+DB_HOST='127.0.0.1'
+
+SECRET_KEY = 'django-insecure-n5qa8(m+f%#p^2g780v)!cl23x*mrul7jw1dj%2c^qlomb7u45'
