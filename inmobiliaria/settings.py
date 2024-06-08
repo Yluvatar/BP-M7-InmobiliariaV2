@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*', 'bp-m7-inmobiliariav2.onrender.com']
-CSRF_TRUSTED_ORIGINS = ['127.0.0.1:8000', 'https://bp-m7-inmobiliariav2.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'https://bp-m7-inmobiliariav2.onrender.com']
 
 AUTH_USER_MODEL = 'web.Usuario'
 
